@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Complaint</title>
+</head>
+<body>
+    <h2>File a Complaint</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Complaint</button>
+    </form>
+    <p><a href="/list/">View My Complaints</a> | <a href="/logout/">Logout</a></p>
+</body>
+</html> 

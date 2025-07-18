@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Complaints</title>
+</head>
+<body>
+    <h2>My Complaints</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Complaint</th>
+            <th>Category</th>
+        </tr>
+        {% for complaint in complaints %}
+        <tr>
+            <td>{{ complaint.created_at }}</td>
+            <td>{{ complaint.text }}</td>
+            <td>{{ complaint.get_category_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No complaints filed yet.</td></tr>
+        {% endfor %}
+    </table>
+    <p><a href="/file/">File New Complaint</a> | <a href="/logout/">Logout</a></p>
+</body>
+</html> 
