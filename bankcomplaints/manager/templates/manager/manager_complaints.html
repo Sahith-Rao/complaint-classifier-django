@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager - Complaints by Category</title>
+</head>
+<body>
+    {% load dict_extras %}
+    <h2>Complaints by Category</h2>
+    {% for cat, complaints in complaints_by_category.items %}
+        <h3>{{ category_labels|dict_get:cat }}</h3>
+        {% if complaints %}
+            <table border="1">
+                <tr>
+                    <th>User</th>
+                    <th>Complaint</th>
+                    <th>Date</th>
+                </tr>
+                {% for complaint in complaints %}
+                <tr>
+                    <td>{{ complaint.user.username }}</td>
+                    <td>{{ complaint.text }}</td>
+                    <td>{{ complaint.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No complaints in this category.</p>
+        {% endif %}
+    {% endfor %}
+    <p><a href="/admin/">Go to Admin</a></p>
+</body>
+</html> 
