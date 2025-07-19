@@ -7,7 +7,7 @@ from .models import Complaint
 import requests
 
 # Replace with your Hugging Face Space API endpoint
-HF_API_URL = "https://Sahith22-complaint-classifier.hf.space/run/predict"
+HF_API_URL = "https://sahith22-complaint-classifier.hf.space/predict"
 
 def register_view(request):
     if request.method == 'POST':
@@ -46,9 +46,12 @@ def file_complaint(request):
             complaint_text = form.cleaned_data['text']
             # Call Hugging Face API to get category
             try:
-                response = requests.post(HF_API_URL, json={"data": [complaint_text]})
-                category = response.json()['data'][0]
-            except Exception:
+                response = requests.post(HF_API_URL, json={"text": complaint_text})
+                print("API status:", response.status_code)
+                print("API response:", response.text)
+                category = response.json().get("category", "Unknown")
+            except Exception as e:
+                print("API error:", e)
                 category = 'credit_card'  # fallback
             Complaint.objects.create(user=request.user, text=complaint_text, category=category)
             return redirect('complaint_list')
