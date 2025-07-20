@@ -2,14 +2,16 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from complaints.models import Complaint
 
-@staff_member_required  # Only staff (manager) can access
+@staff_member_required
 def manager_complaints_view(request):
-    # Get all complaints, ordered by category
-    complaints_by_category = {}
-    categories = [c[0] for c in Complaint.CATEGORY_CHOICES]
-    for cat in categories:
-        complaints_by_category[cat] = Complaint.objects.filter(category=cat).order_by('-created_at')
+    selected_category = request.GET.get('category', '')
+    categories = Complaint.CATEGORY_CHOICES
+    if selected_category:
+        complaints = Complaint.objects.filter(category=selected_category).order_by('-created_at')
+    else:
+        complaints = Complaint.objects.all().order_by('-created_at')
     return render(request, 'manager/manager_complaints.html', {
-        'complaints_by_category': complaints_by_category,
-        'category_labels': dict(Complaint.CATEGORY_CHOICES),
-    }) 
+        'complaints': complaints,
+        'categories': categories,
+        'selected_category': selected_category,
+    })

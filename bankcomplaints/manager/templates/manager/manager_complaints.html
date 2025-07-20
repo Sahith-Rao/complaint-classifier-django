@@ -1,32 +1,88 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Manager - Complaints by Category</title>
+    <link rel="stylesheet" href="{% static 'complaints/style.css' %}">
+    <style>
+        .manager-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+        .category-select-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .category-select-row label {
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+        .category-select-row select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #bbb;
+            font-size: 1rem;
+        }
+        .complaints-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .complaints-table th, .complaints-table td {
+            border: 1px solid #eee;
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+        .complaints-table th {
+            background: #f8f9fa;
+        }
+        .no-complaints {
+            text-align: center;
+            color: #888;
+            margin-top: 2rem;
+        }
+    </style>
 </head>
 <body>
-    {% load dict_extras %}
-    <h2>Complaints by Category</h2>
-    {% for cat, complaints in complaints_by_category.items %}
-        <h3>{{ category_labels|dict_get:cat }}</h3>
+    <div class="manager-container">
+        <h2 class="mb-4 text-center">Complaints by Category</h2>
+        <form method="get" class="category-select-row">
+            <label for="category">Select Category:</label>
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for value, label in categories %}
+                    <option value="{{ value }}" {% if value == selected_category %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </form>
         {% if complaints %}
-            <table border="1">
+            <table class="complaints-table">
                 <tr>
                     <th>User</th>
                     <th>Complaint</th>
                     <th>Date</th>
+                    <th>Category</th>
                 </tr>
                 {% for complaint in complaints %}
                 <tr>
                     <td>{{ complaint.user.username }}</td>
                     <td>{{ complaint.text }}</td>
                     <td>{{ complaint.created_at }}</td>
+                    <td>{{ complaint.get_category_display }}</td>
                 </tr>
                 {% endfor %}
             </table>
         {% else %}
-            <p>No complaints in this category.</p>
+            <div class="no-complaints">No complaints in this category.</div>
         {% endif %}
-    {% endfor %}
-    <p><a href="/admin/">Go to Admin</a></p>
+        <p style="text-align:center; margin-top:2rem;"><a href="/admin/">Go to Admin</a></p>
+    </div>
 </body>
-</html> 
+</html>
