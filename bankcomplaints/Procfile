@@ -1,0 +1,1 @@
+web: gunicorn bankcomplaints.wsgi --log-file - 
